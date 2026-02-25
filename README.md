@@ -174,7 +174,6 @@ This demonstrates that infrastructure-level thinking can begin with core web tec
 
 # 📦 Project Structure
 ---
-## 📦 Project Structure
 
 ```
 circlewell/
@@ -367,11 +366,6 @@ Built for demonstration, innovation, and system thinking.
 
 ---
 
-# 📝 License
-
-MIT License — Demonstration / Portfolio Project
-
----
 
 # 🏥 CircleWell
 
