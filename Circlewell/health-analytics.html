@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Health Analytics</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+
+/* ===== BODY ===== */
+body{
+  margin:0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg,#0f172a,#1e293b);
+  color:white;
+  overflow-x:hidden;
+}
+
+/* ===== HEADER ===== */
+.header{
+  text-align:center;
+  padding:40px 20px;
+  background:linear-gradient(90deg,#22d3ee,#a78bfa);
+  animation: gradientMove 6s infinite alternate;
+}
+
+@keyframes gradientMove{
+  from{filter:hue-rotate(0deg);}
+  to{filter:hue-rotate(90deg);}
+}
+
+.header h1{
+  font-size:42px;
+  margin:0;
+}
+
+.header p{
+  opacity:0.9;
+}
+
+/* ===== CONTAINER ===== */
+.container{
+  padding:40px 20px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:25px;
+}
+
+/* ===== CARD STYLE ===== */
+.card{
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(10px);
+  border-radius:20px;
+  padding:25px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.4);
+  transition:0.3s;
+}
+
+.card:hover{
+  transform:translateY(-8px);
+  box-shadow:0 15px 40px rgba(0,0,0,0.6);
+}
+
+h2{
+  margin-top:0;
+  font-size:22px;
+  margin-bottom:15px;
+}
+
+/* ===== HEALTH SCORE ===== */
+.score{
+  font-size:50px;
+  font-weight:bold;
+  text-align:center;
+  color:#22d3ee;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse{
+  0%{transform:scale(1);}
+  50%{transform:scale(1.1);}
+  100%{transform:scale(1);}
+}
+
+/* ===== BMI INPUT ===== */
+input{
+  width:100%;
+  padding:10px;
+  margin:5px 0;
+  border-radius:8px;
+  border:none;
+}
+
+button{
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  border:none;
+  border-radius:8px;
+  background:#22d3ee;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+button:hover{
+  background:#06b6d4;
+}
+
+/* ===== WATER TRACKER ===== */
+.water-bar{
+  height:20px;
+  background:#1e293b;
+  border-radius:20px;
+  overflow:hidden;
+  margin-top:10px;
+}
+
+.water-fill{
+  height:100%;
+  width:0%;
+  background:#22d3ee;
+  transition:0.5s;
+}
+
+/* ===== FUN FACTS ===== */
+.fact{
+  font-style:italic;
+  min-height:60px;
+}
+
+/* ===== MYTHS ===== */
+.myth{
+  margin-bottom:10px;
+}
+
+.myth span{
+  color:#22d3ee;
+  font-weight:bold;
+}
+
+/* ===== FOOTER ===== */
+.footer{
+  text-align:center;
+  padding:20px;
+}
+
+.footer a{
+  text-decoration:none;
+  background:#22d3ee;
+  padding:10px 20px;
+  border-radius:8px;
+  color:black;
+  font-weight:bold;
+}
+
+.footer a:hover{
+  background:#06b6d4;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <h1>Health Analytics Dashboard</h1>
+  <p>Track your health in real-time with smart insights</p>
+</div>
+
+<div class="container">
+
+  <!-- Live Health Score -->
+  <div class="card">
+    <h2>Live Health Score</h2>
+    <div class="score" id="healthScore">75</div>
+  </div>
+
+  <!-- BMI Calculator -->
+  <div class="card">
+    <h2>BMI Calculator</h2>
+    <input type="number" id="height" placeholder="Height (cm)">
+    <input type="number" id="weight" placeholder="Weight (kg)">
+    <button onclick="calculateBMI()">Calculate BMI</button>
+    <p id="bmiResult"></p>
+  </div>
+
+  <!-- Water Tracker -->
+  <div class="card">
+    <h2>Water Intake Tracker</h2>
+    <p id="waterText">0 / 8 glasses</p>
+    <div class="water-bar">
+      <div class="water-fill" id="waterFill"></div>
+    </div>
+    <button onclick="addWater()">Add Glass</button>
+  </div>
+
+  <!-- Step Counter -->
+  <div class="card">
+    <h2>Daily Step Counter</h2>
+    <div class="score" id="steps">0</div>
+  </div>
+
+  <!-- Fun Facts -->
+  <div class="card">
+    <h2>Fun Health Facts</h2>
+    <div class="fact" id="factBox"></div>
+  </div>
+
+  <!-- Myths -->
+  <div class="card">
+    <h2>Health Myths vs Facts</h2>
+    <div class="myth"><span>Myth:</span> You must drink 8 glasses of water daily.<br>
+    <span>Fact:</span> Needs vary by person.</div>
+
+    <div class="myth"><span>Myth:</span> Cold weather causes cold.<br>
+    <span>Fact:</span> Viruses cause cold.</div>
+
+    <div class="myth"><span>Myth:</span> Cracking knuckles causes arthritis.<br>
+    <span>Fact:</span> No scientific proof.</div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <a href="dashboard.html">Back to Dashboard</a>
+</div>
+
+<script>
+
+/* HEALTH SCORE ANIMATION */
+let score = 75;
+setInterval(()=>{
+  score = Math.floor(Math.random()*20)+70;
+  document.getElementById("healthScore").innerText = score;
+},3000);
+
+/* BMI */
+function calculateBMI(){
+  let h = document.getElementById("height").value/100;
+  let w = document.getElementById("weight").value;
+  let bmi = (w/(h*h)).toFixed(1);
+  document.getElementById("bmiResult").innerText="Your BMI: "+bmi;
+}
+
+/* WATER TRACKER */
+let water = 0;
+function addWater(){
+  if(water<8){
+    water++;
+    document.getElementById("waterText").innerText=water+" / 8 glasses";
+    document.getElementById("waterFill").style.width=(water*12.5)+"%";
+  }
+}
+
+/* STEP COUNTER */
+let steps = 0;
+setInterval(()=>{
+  steps += Math.floor(Math.random()*50);
+  document.getElementById("steps").innerText = steps;
+},2000);
+
+/* FUN FACTS AUTO CHANGE */
+const facts=[
+"Your heart beats about 100,000 times a day.",
+"Laughing boosts your immune system.",
+"Walking 30 minutes daily improves heart health.",
+"Drinking water improves brain performance.",
+"Sleep helps repair your body."
+];
+
+let index=0;
+setInterval(()=>{
+  document.getElementById("factBox").innerText=facts[index];
+  index=(index+1)%facts.length;
+},3000);
+
+</script>
+
+</body>
+</html>

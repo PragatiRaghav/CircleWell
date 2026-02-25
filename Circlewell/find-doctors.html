@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find Doctors | CircleWell</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins',sans-serif;
+}
+
+body{
+  background: linear-gradient(-45deg,#0f172a,#0f766e,#1e3a8a,#9333ea);
+  background-size:400% 400%;
+  animation: gradientMove 12s ease infinite;
+  color:white;
+  overflow-x:hidden;
+}
+
+@keyframes gradientMove{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+/* Floating Blobs */
+.blob{
+  position:fixed;
+  width:400px;
+  height:400px;
+  background:rgba(94,234,212,0.3);
+  filter:blur(120px);
+  border-radius:50%;
+  animation:float 8s ease-in-out infinite;
+  z-index:-1;
+}
+.blob:nth-child(1){top:-100px;left:-100px;}
+.blob:nth-child(2){bottom:-150px;right:-150px;background:rgba(167,139,250,0.3);}
+
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(60px)}
+}
+
+/* NAVBAR */
+.navbar{
+  position:sticky;
+  top:0;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:20px 50px;
+  backdrop-filter:blur(20px);
+  background:rgba(0,0,0,0.3);
+  border-bottom:1px solid rgba(255,255,255,0.1);
+}
+
+.logo{
+  font-size:28px;
+  font-weight:700;
+  background:linear-gradient(90deg,#5eead4,#a78bfa,#22d3ee);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+.nav-btn{
+  padding:10px 22px;
+  border:none;
+  border-radius:30px;
+  cursor:pointer;
+  font-weight:500;
+  background:linear-gradient(90deg,#22d3ee,#a78bfa);
+  color:white;
+  transition:0.3s;
+}
+
+.nav-btn:hover{
+  transform:scale(1.1);
+  box-shadow:0 10px 25px rgba(0,0,0,0.4);
+}
+
+/* HERO */
+.search-section{
+  text-align:center;
+  padding:80px 20px 40px;
+}
+
+.search-section h1{
+  font-size:48px;
+  margin-bottom:20px;
+  background:linear-gradient(90deg,#5eead4,#22d3ee,#a78bfa);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+.search-bar{
+  max-width:700px;
+  margin:auto;
+  display:flex;
+  border-radius:50px;
+  overflow:hidden;
+  background:white;
+  box-shadow:0 20px 50px rgba(0,0,0,0.5);
+}
+
+.search-bar input{
+  flex:1;
+  padding:20px;
+  border:none;
+  outline:none;
+}
+
+.search-bar button{
+  padding:20px 30px;
+  border:none;
+  background:#0f766e;
+  color:white;
+  cursor:pointer;
+}
+
+/* DOCTOR GRID */
+.doctors{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:35px;
+  padding:60px;
+}
+
+.card{
+  background:rgba(255,255,255,0.1);
+  backdrop-filter:blur(20px);
+  border-radius:25px;
+  padding:20px;
+  transition:0.4s;
+  transform:translateY(40px);
+  opacity:0;
+  animation:fadeUp 1s forwards;
+}
+
+.card:nth-child(odd){animation-delay:.2s}
+.card:nth-child(even){animation-delay:.4s}
+
+@keyframes fadeUp{
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+.card:hover{
+  transform:translateY(-15px) scale(1.05);
+  box-shadow:0 30px 70px rgba(0,0,0,0.6);
+}
+
+.card img{
+  width:100%;
+  height:240px;
+  object-fit:cover;
+  border-radius:15px;
+  margin-bottom:15px;
+}
+
+.card h3{
+  color:#5eead4;
+}
+
+.rating{
+  color:#facc15;
+  margin:8px 0;
+}
+
+.card button{
+  padding:10px 20px;
+  border:none;
+  border-radius:20px;
+  background:linear-gradient(90deg,#22d3ee,#a78bfa);
+  color:white;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.card button:hover{
+  transform:scale(1.1);
+}
+
+/* CTA */
+.cta{
+  margin:60px;
+  padding:60px;
+  text-align:center;
+  border-radius:30px;
+  background:linear-gradient(135deg,#1e3a8a,#14b8a6,#9333ea);
+  animation:pulseGlow 3s infinite alternate;
+}
+
+@keyframes pulseGlow{
+  from{box-shadow:0 0 40px rgba(94,234,212,0.3)}
+  to{box-shadow:0 0 80px rgba(167,139,250,0.6)}
+}
+
+.cta h2{
+  font-size:34px;
+  margin-bottom:20px;
+}
+
+.cta button{
+  padding:15px 35px;
+  border:none;
+  border-radius:30px;
+  background:white;
+  font-weight:600;
+  cursor:pointer;
+}
+
+.footer{
+  text-align:center;
+  padding:40px;
+  opacity:0.7;
+}
+</style>
+</head>
+
+<body>
+
+<div class="blob"></div>
+<div class="blob"></div>
+
+<div class="navbar">
+  <div class="logo">CircleWell</div>
+  <button class="nav-btn" onclick="window.location.href='dashboard.html'">
+    Back to Dashboard
+  </button>
+</div>
+
+<section class="search-section">
+  <h1>Find & Connect with Doctors</h1>
+  <div class="search-bar">
+    <input type="text" placeholder="Search by name, specialty, hospital...">
+    <button>Search</button>
+  </div>
+</section>
+
+<section class="doctors">
+
+  <!-- Add as many as you want -->
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2">
+    <h3>Dr. Sarah Johnson</h3>
+    <p>Cardiologist • 12 yrs experience</p>
+    <div class="rating">★★★★★</div>
+    <button>Book Visit</button>
+  </div>
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1607746882042-944635dfe10e">
+    <h3>Dr. Amit Sharma</h3>
+    <p>Orthopedic • 10 yrs experience</p>
+    <div class="rating">★★★★☆</div>
+    <button>Book Visit</button>
+  </div>
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f">
+    <h3>Dr. Emily Clark</h3>
+    <p>Dermatologist • 8 yrs experience</p>
+    <div class="rating">★★★★★</div>
+    <button>Book Visit</button>
+  </div>
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2">
+    <h3>Dr. Sarah Johnson</h3>
+    <p>Cardiologist • 12 yrs experience</p>
+    <div class="rating">★★★★★</div>
+    <button>Book Visit</button>
+  </div>
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1607746882042-944635dfe10e">
+    <h3>Dr. Amit Sharma</h3>
+    <p>Orthopedic • 10 yrs experience</p>
+    <div class="rating">★★★★☆</div>
+    <button>Book Visit</button>
+  </div>
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f">
+    <h3>Dr. Emily Clark</h3>
+    <p>Dermatologist • 8 yrs experience</p>
+    <div class="rating">★★★★★</div>
+    <button>Book Visit</button>
+  </div><div class="card">
+    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2">
+    <h3>Dr. Sarah Johnson</h3>
+    <p>Cardiologist • 12 yrs experience</p>
+    <div class="rating">★★★★★</div>
+    <button>Book Visit</button>
+  </div>
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1607746882042-944635dfe10e">
+    <h3>Dr. Amit Sharma</h3>
+    <p>Orthopedic • 10 yrs experience</p>
+    <div class="rating">★★★★☆</div>
+    <button>Book Visit</button>
+  </div>
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f">
+    <h3>Dr. Emily Clark</h3>
+    <p>Dermatologist • 8 yrs experience</p>
+    <div class="rating">★★★★★</div>
+    <button>Book Visit</button>
+  </div><div class="card">
+    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2">
+    <h3>Dr. Sarah Johnson</h3>
+    <p>Cardiologist • 12 yrs experience</p>
+    <div class="rating">★★★★★</div>
+    <button>Book Visit</button>
+  </div>
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1607746882042-944635dfe10e">
+    <h3>Dr. Amit Sharma</h3>
+    <p>Orthopedic • 10 yrs experience</p>
+    <div class="rating">★★★★☆</div>
+    <button>Book Visit</button>
+  </div>
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f">
+    <h3>Dr. Emily Clark</h3>
+    <p>Dermatologist • 8 yrs experience</p>
+    <div class="rating">★★★★★</div>
+    <button>Book Visit</button>
+  </div><div class="card">
+    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2">
+    <h3>Dr. Sarah Johnson</h3>
+    <p>Cardiologist • 12 yrs experience</p>
+    <div class="rating">★★★★★</div>
+    <button>Book Visit</button>
+  </div>
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1607746882042-944635dfe10e">
+    <h3>Dr. Amit Sharma</h3>
+    <p>Orthopedic • 10 yrs experience</p>
+    <div class="rating">★★★★☆</div>
+    <button>Book Visit</button>
+  </div>
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f">
+    <h3>Dr. Emily Clark</h3>
+    <p>Dermatologist • 8 yrs experience</p>
+    <div class="rating">★★★★★</div>
+    <button>Book Visit</button>
+  </div><div class="card">
+    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2">
+    <h3>Dr. Sarah Johnson</h3>
+    <p>Cardiologist • 12 yrs experience</p>
+    <div class="rating">★★★★★</div>
+    <button>Book Visit</button>
+  </div>
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1607746882042-944635dfe10e">
+    <h3>Dr. Amit Sharma</h3>
+    <p>Orthopedic • 10 yrs experience</p>
+    <div class="rating">★★★★☆</div>
+    <button>Book Visit</button>
+  </div>
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f">
+    <h3>Dr. Emily Clark</h3>
+    <p>Dermatologist • 8 yrs experience</p>
+    <div class="rating">★★★★★</div>
+    <button>Book Visit</button>
+  </div><div class="card">
+    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2">
+    <h3>Dr. Sarah Johnson</h3>
+    <p>Cardiologist • 12 yrs experience</p>
+    <div class="rating">★★★★★</div>
+    <button>Book Visit</button>
+  </div>
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1607746882042-944635dfe10e">
+    <h3>Dr. Amit Sharma</h3>
+    <p>Orthopedic • 10 yrs experience</p>
+    <div class="rating">★★★★☆</div>
+    <button>Book Visit</button>
+  </div>
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f">
+    <h3>Dr. Emily Clark</h3>
+    <p>Dermatologist • 8 yrs experience</p>
+    <div class="rating">★★★★★</div>
+    <button>Book Visit</button>
+  </div><div class="card">
+    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2">
+    <h3>Dr. Sarah Johnson</h3>
+    <p>Cardiologist • 12 yrs experience</p>
+    <div class="rating">★★★★★</div>
+    <button>Book Visit</button>
+  </div>
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1607746882042-944635dfe10e">
+    <h3>Dr. Amit Sharma</h3>
+    <p>Orthopedic • 10 yrs experience</p>
+    <div class="rating">★★★★☆</div>
+    <button>Book Visit</button>
+  </div>
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f">
+    <h3>Dr. Emily Clark</h3>
+    <p>Dermatologist • 8 yrs experience</p>
+    <div class="rating">★★★★★</div>
+    <button>Book Visit</button>
+  </div><div class="card">
+    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2">
+    <h3>Dr. Sarah Johnson</h3>
+    <p>Cardiologist • 12 yrs experience</p>
+    <div class="rating">★★★★★</div>
+    <button>Book Visit</button>
+  </div>
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1607746882042-944635dfe10e">
+    <h3>Dr. Amit Sharma</h3>
+    <p>Orthopedic • 10 yrs experience</p>
+    <div class="rating">★★★★☆</div>
+    <button>Book Visit</button>
+  </div>
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f">
+    <h3>Dr. Emily Clark</h3>
+    <p>Dermatologist • 8 yrs experience</p>
+    <div class="rating">★★★★★</div>
+    <button>Book Visit</button>
+  </div><div class="card">
+    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2">
+    <h3>Dr. Sarah Johnson</h3>
+    <p>Cardiologist • 12 yrs experience</p>
+    <div class="rating">★★★★★</div>
+    <button>Book Visit</button>
+  </div>
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1607746882042-944635dfe10e">
+    <h3>Dr. Amit Sharma</h3>
+    <p>Orthopedic • 10 yrs experience</p>
+    <div class="rating">★★★★☆</div>
+    <button>Book Visit</button>
+  </div>
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f">
+    <h3>Dr. Emily Clark</h3>
+    <p>Dermatologist • 8 yrs experience</p>
+    <div class="rating">★★★★★</div>
+    <button>Book Visit</button>
+  </div>
+<!-- Add as many as you want -->
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2">
+    <h3>Dr. Sarah Johnson</h3>
+    <p>Cardiologist • 12 yrs experience</p>
+    <div class="rating">★★★★★</div>
+    <button>Book Visit</button>
+  </div>
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1607746882042-944635dfe10e">
+    <h3>Dr. Amit Sharma</h3>
+    <p>Orthopedic • 10 yrs experience</p>
+    <div class="rating">★★★★☆</div>
+    <button>Book Visit</button>
+  </div>
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f">
+    <h3>Dr. Emily Clark</h3>
+    <p>Dermatologist • 8 yrs experience</p>
+    <div class="rating">★★★★★</div>
+    <button>Book Visit</button>
+  </div>
+</section>
+
+<section class="cta">
+  <h2>Need urgent consultation?</h2>
+  <button>Start AI Consultation</button>
+</section>
+
+<div class="footer">
+  © 2026 CircleWell Healthcare Platform
+</div>
+
+</body>
+</html>

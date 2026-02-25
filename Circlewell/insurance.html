@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>CircleWell | Insurance & Claims</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Outfit',sans-serif;
+}
+
+body{
+background:#0c0f17;
+color:#e8ecf1;
+min-height:100vh;
+overflow-x:hidden;
+}
+
+.container{
+padding:50px;
+max-width:1300px;
+margin:auto;
+}
+
+h1{
+margin-bottom:40px;
+}
+
+/* Card */
+.card{
+background:rgba(20,25,38,0.85);
+padding:30px;
+border-radius:25px;
+margin-bottom:30px;
+border:1px solid rgba(255,255,255,0.08);
+transition:0.4s;
+}
+
+.card:hover{
+transform:translateY(-6px);
+box-shadow:0 20px 60px rgba(143,159,255,0.15);
+}
+
+input, select{
+width:100%;
+padding:12px;
+margin-top:12px;
+border-radius:12px;
+border:none;
+background:#161c29;
+color:white;
+}
+
+button{
+margin-top:15px;
+padding:12px 20px;
+border:none;
+border-radius:12px;
+background:linear-gradient(90deg,#8f9fff,#c084fc);
+color:white;
+font-weight:600;
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+transform:translateY(-3px);
+box-shadow:0 10px 30px rgba(143,159,255,0.4);
+}
+
+.policy{
+background:#161c29;
+padding:20px;
+border-radius:18px;
+margin-top:20px;
+}
+
+.status{
+margin-top:10px;
+color:#8f9fff;
+font-weight:600;
+}
+.back-btn{
+margin-bottom:25px;
+background:rgba(255,255,255,0.1);
+border:1px solid rgba(255,255,255,0.2);
+padding:10px 18px;
+border-radius:12px;
+color:#fff;
+cursor:pointer;
+transition:0.3s;
+}
+
+.back-btn:hover{
+background:linear-gradient(90deg,#8f9fff,#c084fc);
+box-shadow:0 10px 25px rgba(143,159,255,0.4);
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Insurance & Claims Management</h1>
+<button class="back-btn" onclick="goDashboard()">← Back to Dashboard</button>
+
+<!-- Add Policy -->
+<div class="card">
+<h2>Add Insurance Policy</h2>
+
+<select id="company">
+<option>Select Insurance Provider</option>
+<option>Star Health & Allied Insurance</option>
+<option>HDFC ERGO Health Insurance</option>
+<option>ICICI Lombard General Insurance</option>
+<option>Niva Bupa Health Insurance</option>
+<option>Care Health Insurance</option>
+<option>Aditya Birla Health Insurance</option>
+<option>Tata AIG Health Insurance</option>
+<option>SBI General Insurance</option>
+<option>Bajaj Allianz General Insurance</option>
+<option>Reliance General Insurance</option>
+<option>Future Generali India Insurance</option>
+<option>ManipalCigna Health Insurance</option>
+<option>Cholamandalam MS General Insurance</option>
+<option>National Insurance Company</option>
+<option>New India Assurance</option>
+<option>Oriental Insurance Company</option>
+<option>United India Insurance</option>
+</select>
+
+<input type="text" id="policyNumber" placeholder="Policy Number">
+<input type="number" id="sumInsured" placeholder="Sum Insured (₹)">
+<button onclick="addPolicy()">Save Policy</button>
+
+<div id="policyList"></div>
+</div>
+
+<!-- Cashless Claim -->
+<div class="card">
+<h2>Cashless Claim Request</h2>
+<input type="text" id="hospital" placeholder="Hospital Name">
+<input type="number" id="claimAmount" placeholder="Claim Amount (₹)">
+<button onclick="submitClaim()">Submit Claim</button>
+<div class="status" id="claimStatus"></div>
+</div>
+
+</div>
+
+<script>
+
+window.onload=function(){
+loadPolicies();
+}
+
+function addPolicy(){
+let company=document.getElementById("company").value;
+let number=document.getElementById("policyNumber").value;
+let sum=document.getElementById("sumInsured").value;
+
+if(company==="Select Insurance Provider"){
+alert("Please select provider");
+return;
+}
+
+let policies=JSON.parse(localStorage.getItem("policies"))||[];
+policies.push({company,number,sum});
+localStorage.setItem("policies",JSON.stringify(policies));
+loadPolicies();
+}
+
+function loadPolicies(){
+let policies=JSON.parse(localStorage.getItem("policies"))||[];
+let list=document.getElementById("policyList");
+list.innerHTML="";
+
+policies.forEach(p=>{
+let div=document.createElement("div");
+div.className="policy";
+div.innerHTML=`
+<strong>${p.company}</strong><br>
+Policy No: ${p.number}<br>
+Sum Insured: ₹${p.sum}
+`;
+list.appendChild(div);
+});
+}
+
+function submitClaim(){
+document.getElementById("claimStatus").innerText="Processing Cashless Approval...";
+setTimeout(()=>{
+document.getElementById("claimStatus").innerText="✅ Cashless Claim Approved (Demo Mode)";
+},2000);
+}
+function goDashboard(){
+  window.location.href = "dashboard.html";
+}
+
+</script>
+
+</body>
+</html>

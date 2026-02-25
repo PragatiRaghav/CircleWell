@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CircleWell • Book Appointment</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:'Poppins',sans-serif;
+  background:linear-gradient(135deg,#020617,#0f172a);
+  color:white;
+  overflow-x:hidden;
+}
+
+/* ================= NAVBAR ================= */
+.navbar{
+  position:sticky;
+  top:0;
+  z-index:1000;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:18px 40px;
+  background:rgba(15,23,42,.75);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.logo{
+  font-size:26px;
+  font-weight:700;
+  background:linear-gradient(90deg,#5eead4,#a78bfa);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+.nav-links{
+  display:flex;
+  gap:28px;
+  align-items:center;
+}
+
+.nav-links a{
+  color:#cbd5e1;
+  text-decoration:none;
+  font-weight:500;
+  transition:.3s;
+}
+
+.nav-links a:hover{
+  color:#5eead4;
+}
+
+/* ================= PAGE ================= */
+.container{
+  padding:60px 20px 90px;
+  display:flex;
+  justify-content:center;
+}
+
+.form-card{
+  width:100%;
+  max-width:900px;
+  background:rgba(15,23,42,.65);
+  border-radius:26px;
+  padding:40px;
+  border:1px solid rgba(255,255,255,.08);
+  backdrop-filter:blur(14px);
+  animation:fadeUp .7s ease;
+  position:relative;
+  overflow:hidden;
+}
+
+.form-card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(120deg,transparent,rgba(255,255,255,.08),transparent);
+  opacity:0;
+  transition:.4s;
+}
+
+.form-card:hover::before{
+  opacity:1;
+}
+
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(40px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.title{
+  font-size:38px;
+  text-align:center;
+  margin-bottom:10px;
+  background:linear-gradient(90deg,#5eead4,#a78bfa);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+.subtitle{
+  text-align:center;
+  color:#94a3b8;
+  margin-bottom:30px;
+}
+
+/* ================= FORM ================= */
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:18px;
+}
+
+.input-group{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.input-group label{
+  font-size:13px;
+  color:#cbd5e1;
+}
+
+.input-group input,
+.input-group select,
+.input-group textarea{
+  padding:13px 14px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(2,6,23,.7);
+  color:white;
+  font-family:inherit;
+  transition:.25s;
+}
+
+.input-group input:focus,
+.input-group select:focus,
+.input-group textarea:focus{
+  outline:none;
+  border-color:#5eead4;
+  box-shadow:0 0 0 2px rgba(94,234,212,.15);
+}
+
+textarea{
+  resize:none;
+  min-height:110px;
+}
+
+.full{
+  grid-column:1/-1;
+}
+
+/* ================= BUTTON ================= */
+.submit-btn{
+  margin-top:28px;
+  width:100%;
+  padding:16px;
+  border:none;
+  border-radius:14px;
+  font-weight:600;
+  font-size:16px;
+  background:linear-gradient(135deg,#5eead4,#a78bfa);
+  color:#020617;
+  cursor:pointer;
+  transition:.25s;
+}
+
+.submit-btn:hover{
+  transform:scale(1.05);
+}
+
+/* ================= MODAL ================= */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  pointer-events:none;
+  transition:.3s;
+}
+
+.modal.active{
+  opacity:1;
+  pointer-events:auto;
+}
+
+.modal-box{
+  background:#020617;
+  padding:42px;
+  border-radius:22px;
+  text-align:center;
+  border:1px solid rgba(255,255,255,.12);
+  animation:pop .4s ease;
+}
+
+@keyframes pop{
+  from{transform:scale(.7);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+
+.ok-btn{
+  margin-top:20px;
+  padding:12px 26px;
+  border:none;
+  border-radius:999px;
+  background:linear-gradient(135deg,#5eead4,#a78bfa);
+  color:#020617;
+  font-weight:600;
+  cursor:pointer;
+}
+</style>
+</head>
+<body>
+
+<!-- ================= NAVBAR ================= -->
+<div class="navbar">
+  <div class="logo">CircleWell</div>
+  <div class="nav-links">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="find-doctors.html">Find Doctors</a>
+    <a href="login.html">Logout</a>
+  </div>
+</div>
+
+<!-- ================= FORM ================= -->
+<div class="container">
+  <div class="form-card">
+
+    <h1 class="title">Book Appointment</h1>
+    <p class="subtitle">Fill full details to schedule your doctor visit</p>
+
+    <form onsubmit="bookAppointment(event)">
+      <div class="form-grid">
+
+        <div class="input-group">
+          <label>Full Name</label>
+          <input type="text" required>
+        </div>
+
+        <div class="input-group">
+          <label>Phone Number</label>
+          <input type="tel" required>
+        </div>
+
+        <div class="input-group">
+          <label>Email</label>
+          <input type="email" required>
+        </div>
+
+        <div class="input-group">
+          <label>Age</label>
+          <input type="number" required>
+        </div>
+
+        <div class="input-group">
+          <label>Gender</label>
+          <select required>
+            <option value="">Select</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label>Select Doctor</label>
+          <select required>
+            <option>Dr. Rajesh Sharma</option>
+            <option>Dr. Neha Gupta</option>
+            <option>Dr. Amit Verma</option>
+            <option>Dr. Priya Mehta</option>
+            <option>Dr. Sneha Arora</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label>Appointment Date</label>
+          <input type="date" required>
+        </div>
+
+        <div class="input-group">
+          <label>Time Slot</label>
+          <select required>
+            <option>09:00 AM</option>
+            <option>11:00 AM</option>
+            <option>02:00 PM</option>
+            <option>05:00 PM</option>
+          </select>
+        </div>
+
+        <div class="input-group full">
+          <label>Describe Your Problem</label>
+          <textarea placeholder="Symptoms, duration, etc..."></textarea>
+        </div>
+
+      </div>
+
+      <button class="submit-btn">Confirm Appointment</button>
+    </form>
+
+  </div>
+</div>
+
+<!-- ================= SUCCESS MODAL ================= -->
+<div class="modal" id="successModal">
+  <div class="modal-box">
+    <h2>✅ Appointment Booked!</h2>
+    <p>Your doctor visit has been scheduled successfully.</p>
+    <button class="ok-btn" onclick="closeModal()">OK</button>
+  </div>
+</div>
+
+<script>
+function bookAppointment(e){
+  e.preventDefault();
+  document.getElementById("successModal").classList.add("active");
+}
+
+function closeModal(){
+  document.getElementById("successModal").classList.remove("active");
+  window.location.href = "dashboard.html";
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CircleWell – Medical Vault</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* =========================
+   GLOBAL STYLES
+========================= */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins',sans-serif;
+}
+
+body{
+  background:linear-gradient(135deg,#0f2027,#1b5e63,#6a5acd);
+  color:#fff;
+  min-height:100vh;
+}
+
+/* HEADER */
+header{
+  padding:20px 60px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  backdrop-filter:blur(12px);
+}
+
+header h1{
+  font-size:22px;
+  font-weight:600;
+}
+
+nav a{
+  color:#fff;
+  margin-left:25px;
+  text-decoration:none;
+  opacity:.8;
+  transition:.3s;
+}
+
+nav a:hover{opacity:1;}
+
+/* CONTAINER */
+.container{
+  max-width:1200px;
+  margin:60px auto;
+  padding:0 20px;
+}
+
+/* GLASS CARD */
+.card{
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(20px);
+  border-radius:24px;
+  padding:30px;
+  box-shadow:0 20px 40px rgba(0,0,0,.3);
+  margin-bottom:30px;
+  animation:fadeIn .8s ease;
+}
+
+/* LOGIN SECTION */
+#loginSection{
+  max-width:450px;
+  margin:auto;
+  text-align:center;
+}
+
+input,select{
+  width:100%;
+  padding:14px;
+  border-radius:14px;
+  border:none;
+  margin-top:15px;
+  background:rgba(255,255,255,0.12);
+  color:#fff;
+  outline:none;
+  transition:.3s;
+}
+
+input:focus{
+  box-shadow:0 0 10px #1dd1a1;
+}
+
+button{
+  padding:12px 18px;
+  border:none;
+  border-radius:14px;
+  cursor:pointer;
+  font-weight:500;
+  background:linear-gradient(135deg,#1dd1a1,#6a5acd);
+  color:#fff;
+  margin-top:15px;
+  transition:.3s;
+}
+
+button:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 20px rgba(0,0,0,.4);
+}
+
+/* SUMMARY CARDS */
+.summary{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:20px;
+}
+
+.summary-card{
+  background:rgba(255,255,255,0.1);
+  padding:20px;
+  border-radius:20px;
+  transition:.3s;
+}
+
+.summary-card:hover{
+  transform:translateY(-5px);
+  background:rgba(255,255,255,0.15);
+}
+
+.summary-card h3{
+  font-size:14px;
+  opacity:.8;
+}
+
+.summary-card p{
+  font-size:22px;
+  font-weight:600;
+  margin-top:8px;
+}
+
+/* TABLE */
+.table-wrapper{
+  overflow-x:auto;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th,td{
+  padding:14px;
+  text-align:left;
+}
+
+thead{
+  background:rgba(255,255,255,0.1);
+  position:sticky;
+  top:0;
+}
+
+tbody tr{
+  transition:.3s;
+}
+
+tbody tr:hover{
+  background:rgba(255,255,255,0.08);
+}
+
+.status{
+  padding:6px 12px;
+  border-radius:50px;
+  font-size:12px;
+}
+
+.delivered{background:#1dd1a1;}
+.pending{background:#feca57;}
+.cancelled{background:#ff6b6b;}
+
+/* MODAL */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  visibility:hidden;
+  opacity:0;
+  transition:.3s;
+}
+
+.modal.active{
+  visibility:visible;
+  opacity:1;
+}
+
+.modal-content{
+  background:#111;
+  padding:30px;
+  border-radius:24px;
+  width:400px;
+  animation:pop .4s ease;
+}
+
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(20px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+@keyframes pop{
+  from{transform:scale(.8);opacity:0;}
+  to{transform:scale(1);opacity:1;}
+}
+
+.hidden{display:none;}
+
+@media(max-width:768px){
+  header{padding:20px;}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>CircleWell</h1>
+  <nav>
+    <nav>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="book-appointment.html">Appointments</a>
+  <a href="find-doctors.html">Find Doctors</a>
+  <a href="records.html">Medical Vault</a>
+</nav>
+  </nav>
+</header>
+
+<div class="container">
+
+<!-- LOGIN -->
+<div id="loginSection" class="card">
+  <h2>🔐 Secure Medical Vault</h2>
+  <p style="opacity:.7;margin-top:10px;">Enter your Patient ID to access transaction history</p>
+  <input type="text" id="patientID" placeholder="Patient ID (e.g. MV-20481)">
+  <button onclick="verifyID()">Access Vault</button>
+  <p id="loginError" style="color:#ff6b6b;margin-top:10px;display:none;">Invalid Patient ID</p>
+</div>
+
+<!-- DASHBOARD -->
+<div id="vaultDashboard" class="hidden">
+
+  <!-- SUMMARY -->
+  <div class="card summary">
+    <div class="summary-card">
+      <h3>Total Orders</h3>
+      <p id="totalOrders">3</p>
+    </div>
+    <div class="summary-card">
+      <h3>Total Spent</h3>
+      <p>$111.00</p>
+    </div>
+    <div class="summary-card">
+      <h3>Last Purchase</h3>
+      <p>10 Feb 2026</p>
+    </div>
+    <div class="summary-card">
+      <h3>Active Prescriptions</h3>
+      <p>1</p>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="card">
+    <h2 style="margin-bottom:15px;">Transaction History</h2>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Product</th>
+            <th>Category</th>
+            <th>Qty</th>
+            <th>Price</th>
+            <th>Date</th>
+            <th>Doctor</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>TXN-88921</td>
+            <td>Amoxicillin 500mg</td>
+            <td>Prescription</td>
+            <td>14</td>
+            <td>$28.00</td>
+            <td>12 Jan 2026</td>
+            <td>Dr. Smith</td>
+            <td><span class="status delivered">Delivered</span></td>
+            <td>
+              <button onclick="viewDetails()">View</button>
+              <button onclick="reorder('Amoxicillin 500mg')">Order Again</button>
+            </td>
+          </tr>
+          <tr>
+            <td>TXN-88972</td>
+            <td>Vitamin D3</td>
+            <td>OTC</td>
+            <td>2</td>
+            <td>$18.00</td>
+            <td>10 Feb 2026</td>
+            <td>-</td>
+            <td><span class="status pending">Pending</span></td>
+            <td>
+              <button onclick="viewDetails()">View</button>
+              <button onclick="reorder('Vitamin D3')">Order Again</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="modal" id="detailModal">
+  <div class="modal-content">
+    <h3>Transaction Details</h3>
+    <p><strong>Invoice:</strong> INV-99021</p>
+    <p><strong>Products:</strong> Metformin 500mg (Qty 30)</p>
+    <p><strong>Doctor:</strong> Dr. Emily Carter</p>
+    <p><strong>Pharmacy:</strong> Central Care Pharmacy</p>
+    <p><strong>Payment:</strong> Visa **** 4421</p>
+    <p><strong>Total:</strong> $134.00</p>
+    <button>Download Invoice</button>
+    <button onclick="closeModal()">Close</button>
+  </div>
+</div>
+
+<!-- REORDER MODAL -->
+<div class="modal" id="reorderModal">
+  <div class="modal-content">
+    <h3 id="reorderText"></h3>
+    <button onclick="confirmReorder()">Confirm Order</button>
+    <button onclick="closeReorder()">Cancel</button>
+  </div>
+</div>
+
+<script>
+function verifyID(){
+  const id=document.getElementById("patientID").value;
+  if(id==="MV-20481"){
+    document.getElementById("loginSection").classList.add("hidden");
+    document.getElementById("vaultDashboard").classList.remove("hidden");
+  }else{
+    document.getElementById("loginError").style.display="block";
+  }
+}
+
+function viewDetails(){
+  document.getElementById("detailModal").classList.add("active");
+}
+
+function closeModal(){
+  document.getElementById("detailModal").classList.remove("active");
+}
+
+function reorder(product){
+  document.getElementById("reorderText").innerText=
+  "Are you sure you want to reorder "+product+"?";
+  document.getElementById("reorderModal").classList.add("active");
+}
+
+function closeReorder(){
+  document.getElementById("reorderModal").classList.remove("active");
+}
+
+function confirmReorder(){
+  alert("✔ Order Successfully Placed\nEstimated Delivery: 2–3 Days");
+  closeReorder();
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CircleWell | Notification Centre</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins',sans-serif;
+}
+
+body{
+  min-height:100vh;
+  background:linear-gradient(-45deg,#0f172a,#0f766e,#1e3a8a,#4c1d95);
+  background-size:400% 400%;
+  animation:bgFlow 18s ease infinite;
+  color:white;
+}
+
+@keyframes bgFlow{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+.header{
+  padding:30px 50px;
+  font-size:28px;
+  font-weight:700;
+  backdrop-filter:blur(20px);
+  background:rgba(0,0,0,0.3);
+  border-bottom:1px solid rgba(255,255,255,0.1);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.badge{
+  background:#ef4444;
+  padding:5px 12px;
+  border-radius:20px;
+  font-size:13px;
+}
+
+.container{
+  padding:50px;
+  max-width:900px;
+  margin:auto;
+}
+
+.filters{
+  display:flex;
+  gap:15px;
+  margin-bottom:30px;
+  flex-wrap:wrap;
+}
+
+.filter-btn{
+  padding:8px 18px;
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,0.2);
+  background:rgba(255,255,255,0.05);
+  cursor:pointer;
+  transition:.3s;
+}
+
+.filter-btn.active{
+  background:linear-gradient(90deg,#22d3ee,#a78bfa);
+}
+
+.filter-btn:hover{
+  transform:scale(1.05);
+}
+
+.notification-list{
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+
+.notification{
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(20px);
+  padding:20px;
+  border-radius:20px;
+  border-left:5px solid #22d3ee;
+  transition:.3s;
+  position:relative;
+}
+
+.notification.unread{
+  background:rgba(255,255,255,0.15);
+}
+
+.notification.critical{
+  border-left-color:#ef4444;
+}
+
+.notification.high{
+  border-left-color:#f97316;
+}
+
+.notification:hover{
+  transform:translateY(-5px);
+}
+
+.time{
+  font-size:12px;
+  opacity:.7;
+  margin-top:5px;
+}
+
+.actions{
+  margin-top:10px;
+}
+
+.actions button{
+  padding:5px 12px;
+  border:none;
+  border-radius:15px;
+  margin-right:8px;
+  cursor:pointer;
+  font-size:12px;
+}
+
+.read-btn{
+  background:#22d3ee;
+  color:black;
+}
+
+.delete-btn{
+  background:#ef4444;
+  color:white;
+}
+
+.clear-all{
+  margin-top:30px;
+  padding:12px 25px;
+  border:none;
+  border-radius:25px;
+  background:linear-gradient(90deg,#ef4444,#dc2626);
+  color:white;
+  cursor:pointer;
+}
+
+.empty{
+  text-align:center;
+  opacity:.7;
+  margin-top:50px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  🔔 Notification Centre
+  <div class="badge" id="unreadCount">0 Unread</div>
+</div>
+
+<div class="container">
+
+<div class="filters">
+  <div class="filter-btn active" onclick="filterNotifications('all',this)">All</div>
+  <div class="filter-btn" onclick="filterNotifications('critical',this)">Critical</div>
+  <div class="filter-btn" onclick="filterNotifications('appointments',this)">Appointments</div>
+  <div class="filter-btn" onclick="filterNotifications('ai',this)">AI Insights</div>
+</div>
+
+<div class="notification-list" id="notificationList">
+
+<div class="notification unread critical" data-type="critical">
+  <strong>🚨 High Blood Pressure Alert</strong>
+  <div>Your recent BP reading exceeded normal levels.</div>
+  <div class="time">10 minutes ago</div>
+  <div class="actions">
+    <button class="read-btn" onclick="markRead(this)">Mark Read</button>
+    <button class="delete-btn" onclick="deleteNotification(this)">Delete</button>
+  </div>
+</div>
+
+<div class="notification unread high" data-type="appointments">
+  <strong>📅 Appointment Reminder</strong>
+  <div>Dr. Mehta appointment tomorrow at 10:30 AM.</div>
+  <div class="time">1 hour ago</div>
+  <div class="actions">
+    <button class="read-btn" onclick="markRead(this)">Mark Read</button>
+    <button class="delete-btn" onclick="deleteNotification(this)">Delete</button>
+  </div>
+</div>
+
+<div class="notification unread" data-type="ai">
+  <strong>🧠 AI Health Insight</strong>
+  <div>Your cholesterol trend is slightly increasing.</div>
+  <div class="time">Yesterday</div>
+  <div class="actions">
+    <button class="read-btn" onclick="markRead(this)">Mark Read</button>
+    <button class="delete-btn" onclick="deleteNotification(this)">Delete</button>
+  </div>
+</div>
+
+</div>
+
+<button class="clear-all" onclick="clearAll()">Clear All Notifications</button>
+
+<div class="empty" id="emptyMessage" style="display:none;">
+  🎉 You're all caught up!
+</div>
+
+</div>
+
+<script>
+
+function updateUnreadCount(){
+  const unread = document.querySelectorAll('.notification.unread').length;
+  document.getElementById("unreadCount").innerText = unread + " Unread";
+}
+updateUnreadCount();
+
+function markRead(btn){
+  const notif = btn.closest(".notification");
+  notif.classList.remove("unread");
+  updateUnreadCount();
+}
+
+function deleteNotification(btn){
+  btn.closest(".notification").remove();
+  updateUnreadCount();
+  checkEmpty();
+}
+
+function clearAll(){
+  document.getElementById("notificationList").innerHTML="";
+  updateUnreadCount();
+  checkEmpty();
+}
+
+function checkEmpty(){
+  const list = document.getElementById("notificationList");
+  if(list.children.length === 0){
+    document.getElementById("emptyMessage").style.display="block";
+  }
+}
+
+function filterNotifications(type,btn){
+  document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+
+  document.querySelectorAll(".notification").forEach(n=>{
+    if(type==="all"){
+      n.style.display="block";
+    }else{
+      if(n.dataset.type===type){
+        n.style.display="block";
+      }else{
+        n.style.display="none";
+      }
+    }
+  });
+}
+</script>
+
+</body>
+</html>

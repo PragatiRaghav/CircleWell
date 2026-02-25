@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CircleWell – Appointments</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+    --bg-gradient: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    --card-bg: rgba(255,255,255,0.08);
+    --border: rgba(255,255,255,0.15);
+    --text: #ffffff;
+    --muted: rgba(255,255,255,0.6);
+    --teal:#00f5d4;
+    --indigo:#6366f1;
+    --purple:#a855f7;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Inter',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:linear-gradient(120deg,#0f2027,#203a43,#2c5364);
+    color:var(--text);
+    overflow-x:hidden;
+}
+
+/* Floating particles */
+.particles span{
+    position:absolute;
+    width:6px;
+    height:6px;
+    background:rgba(255,255,255,0.2);
+    border-radius:50%;
+    animation:float 12s infinite linear;
+}
+@keyframes float{
+    from{transform:translateY(100vh) scale(0.5);}
+    to{transform:translateY(-10vh) scale(1);}
+}
+
+/* Navbar */
+.navbar{
+    position:fixed;
+    top:0;
+    width:100%;
+    padding:20px 40px;
+    backdrop-filter:blur(20px);
+    background:rgba(255,255,255,0.05);
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    z-index:100;
+}
+
+.logo{
+    font-weight:600;
+    font-size:20px;
+    background:linear-gradient(90deg,var(--teal),var(--indigo),var(--purple));
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.nav-links a{
+    margin-left:25px;
+    text-decoration:none;
+    color:var(--muted);
+    transition:0.3s;
+}
+.nav-links a:hover{
+    color:white;
+}
+
+/* Hero */
+.hero{
+    margin-top:110px;
+    padding:80px 40px;
+    text-align:center;
+    background:linear-gradient(120deg,rgba(0,245,212,0.15),rgba(168,85,247,0.15));
+    backdrop-filter:blur(30px);
+    border-bottom:1px solid var(--border);
+}
+.hero h1{
+    font-size:48px;
+    background:linear-gradient(90deg,var(--teal),var(--indigo),var(--purple));
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+.hero p{
+    margin-top:15px;
+    color:var(--muted);
+    font-size:18px;
+}
+
+/* Stats */
+.stats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:25px;
+    padding:50px 40px;
+}
+.stat-card{
+    padding:30px;
+    border-radius:30px;
+    background:var(--card-bg);
+    backdrop-filter:blur(20px);
+    border:1px solid var(--border);
+    box-shadow:0 10px 30px rgba(0,0,0,0.3);
+    transition:0.3s;
+    position:relative;
+    overflow:hidden;
+}
+.stat-card:hover{
+    transform:translateY(-5px);
+}
+.stat-card::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius:30px;
+    padding:1px;
+    background:linear-gradient(120deg,var(--teal),var(--indigo),var(--purple));
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;
+    mask-composite:exclude;
+}
+.stat-card h3{
+    color:var(--muted);
+    font-weight:400;
+}
+.stat-card h2{
+    font-size:34px;
+    margin-top:10px;
+}
+
+/* Filters */
+.filters{
+    padding:0 40px 30px 40px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:20px;
+}
+.filters input, .filters select{
+    padding:12px 18px;
+    border-radius:25px;
+    border:1px solid var(--border);
+    background:var(--card-bg);
+    backdrop-filter:blur(10px);
+    color:white;
+    outline:none;
+}
+
+/* Appointment list */
+.appointments{
+    padding:20px 40px 80px 40px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+    gap:30px;
+}
+
+.card{
+    padding:30px;
+    border-radius:30px;
+    background:var(--card-bg);
+    backdrop-filter:blur(20px);
+    border:1px solid var(--border);
+    box-shadow:0 15px 40px rgba(0,0,0,0.3);
+    transition:transform 0.4s, box-shadow 0.4s;
+    transform-style:preserve-3d;
+    opacity:0;
+    transform:translateY(40px);
+}
+.card.visible{
+    opacity:1;
+    transform:translateY(0);
+    transition:0.6s ease;
+}
+.card:hover{
+    transform:rotateX(5deg) rotateY(5deg) translateY(-5px);
+    box-shadow:0 25px 60px rgba(0,0,0,0.4);
+}
+
+.card h3{
+    font-size:20px;
+}
+.card p{
+    color:var(--muted);
+    margin-top:6px;
+}
+
+.badge{
+    display:inline-block;
+    padding:6px 14px;
+    border-radius:20px;
+    font-size:12px;
+    margin-top:12px;
+}
+.upcoming{background:rgba(0,245,212,0.2);color:var(--teal);}
+.completed{background:rgba(99,102,241,0.2);color:var(--indigo);}
+.cancelled{background:rgba(168,85,247,0.2);color:var(--purple);}
+
+.buttons{
+    margin-top:20px;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+.buttons button{
+    padding:8px 16px;
+    border:none;
+    border-radius:20px;
+    cursor:pointer;
+    background:linear-gradient(90deg,var(--teal),var(--indigo));
+    color:white;
+    font-size:12px;
+    transition:0.3s;
+}
+.buttons button:hover{
+    transform:scale(1.05);
+}
+
+/* Toast */
+.toast{
+    position:fixed;
+    bottom:30px;
+    right:30px;
+    background:var(--card-bg);
+    backdrop-filter:blur(15px);
+    padding:15px 25px;
+    border-radius:25px;
+    border:1px solid var(--border);
+    opacity:0;
+    transition:0.4s;
+}
+.toast.show{
+    opacity:1;
+}
+
+/* Modal */
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.5);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    opacity:0;
+    pointer-events:none;
+    transition:0.4s;
+}
+.modal.active{
+    opacity:1;
+    pointer-events:auto;
+}
+.modal-content{
+    background:var(--card-bg);
+    padding:40px;
+    border-radius:35px;
+    backdrop-filter:blur(20px);
+    border:1px solid var(--border);
+    width:90%;
+    max-width:400px;
+}
+.modal-content input{
+    width:100%;
+    margin-top:15px;
+    padding:10px;
+    border-radius:20px;
+    border:1px solid var(--border);
+    background:transparent;
+    color:white;
+}
+.modal-content button{
+    margin-top:20px;
+    width:100%;
+}
+
+/* Loading shimmer */
+.shimmer{
+    height:150px;
+    border-radius:30px;
+    background:linear-gradient(90deg,rgba(255,255,255,0.05) 25%,rgba(255,255,255,0.15) 50%,rgba(255,255,255,0.05) 75%);
+    background-size:200% 100%;
+    animation:shimmer 1.5s infinite;
+}
+@keyframes shimmer{
+    0%{background-position:200% 0;}
+    100%{background-position:-200% 0;}
+}
+
+@media(max-width:768px){
+    .hero h1{font-size:34px;}
+}
+</style>
+</head>
+<body>
+
+<div class="particles"></div>
+
+<div class="navbar">
+    <div class="logo">CircleWell</div>
+    <div class="nav-links">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="book-appointment.html">Appointments</a>
+    <a href="profile.html">Profile</a>
+    <a href="logout.html">Logout</a>
+</div>
+</div>
+
+<section class="hero">
+    <h1>Your Appointments</h1>
+    <p>Manage and track your medical visits</p>
+</section>
+
+<section class="stats">
+    <div class="stat-card">
+        <h3>Total Appointments</h3>
+        <h2 id="totalCount">0</h2>
+    </div>
+    <div class="stat-card">
+        <h3>Upcoming</h3>
+        <h2 id="upcomingCount">0</h2>
+    </div>
+    <div class="stat-card">
+        <h3>Completed</h3>
+        <h2 id="completedCount">0</h2>
+    </div>
+    <div class="stat-card">
+        <h3>Cancelled</h3>
+        <h2 id="cancelledCount">0</h2>
+    </div>
+</section>
+
+<section class="filters">
+    <input type="text" id="search" placeholder="Search doctor or clinic">
+    <select id="filter">
+        <option value="All">All</option>
+        <option value="Upcoming">Upcoming</option>
+        <option value="Completed">Completed</option>
+        <option value="Cancelled">Cancelled</option>
+    </select>
+    <select id="sort">
+        <option value="asc">Sort by Date ↑</option>
+        <option value="desc">Sort by Date ↓</option>
+    </select>
+</section>
+
+<section class="appointments" id="appointmentList">
+    <div class="shimmer"></div>
+    <div class="shimmer"></div>
+    <div class="shimmer"></div>
+</section>
+
+<div class="toast" id="toast">Appointment Cancelled</div>
+
+<div class="modal" id="modal">
+    <div class="modal-content">
+        <h3>Reschedule Appointment</h3>
+        <input type="date" id="newDate">
+        <input type="time" id="newTime">
+        <button onclick="saveReschedule()">Save Changes</button>
+    </div>
+</div>
+
+<script>
+const appointments = [
+    {id:1, doctor:"Dr. Sarah Johnson", specialty:"Cardiologist", date:"2026-03-01", time:"10:00 AM", clinic:"City Heart Center", status:"Upcoming"},
+    {id:2, doctor:"Dr. Michael Lee", specialty:"Dermatologist", date:"2026-02-15", time:"2:30 PM", clinic:"Glow Skin Clinic", status:"Completed"},
+    {id:3, doctor:"Dr. Emily Clark", specialty:"Neurologist", date:"2026-02-20", time:"9:00 AM", clinic:"NeuroCare Hospital", status:"Cancelled"},
+    {id:4, doctor:"Dr. James Wilson", specialty:"Orthopedic", date:"2026-03-10", time:"1:00 PM", clinic:"OrthoPlus Clinic", status:"Upcoming"}
+];
+
+const list = document.getElementById("appointmentList");
+
+function renderAppointments(){
+    list.innerHTML="";
+    let search = document.getElementById("search").value.toLowerCase();
+    let filter = document.getElementById("filter").value;
+    let sort = document.getElementById("sort").value;
+
+    let filtered = appointments.filter(a =>
+        (filter==="All"||a.status===filter) &&
+        (a.doctor.toLowerCase().includes(search)||a.clinic.toLowerCase().includes(search))
+    );
+
+    filtered.sort((a,b)=> sort==="asc" ? new Date(a.date)-new Date(b.date) : new Date(b.date)-new Date(a.date));
+
+    filtered.forEach(a=>{
+        const card=document.createElement("div");
+        card.className="card";
+        card.innerHTML=`
+            <h3>${a.doctor}</h3>
+            <p>${a.specialty}</p>
+            <p>${a.date} • ${a.time}</p>
+            <p>${a.clinic}</p>
+            <span class="badge ${a.status.toLowerCase()}">${a.status}</span>
+            <div class="buttons">
+                <button onclick="openModal(${a.id})">Reschedule</button>
+                <button onclick="cancelAppointment(${a.id})">Cancel</button>
+                <button>Join Video</button>
+            </div>
+        `;
+        list.appendChild(card);
+        setTimeout(()=>card.classList.add("visible"),100);
+    });
+
+    updateStats();
+}
+
+function updateStats(){
+    document.getElementById("totalCount").innerText=appointments.length;
+    document.getElementById("upcomingCount").innerText=appointments.filter(a=>a.status==="Upcoming").length;
+    document.getElementById("completedCount").innerText=appointments.filter(a=>a.status==="Completed").length;
+    document.getElementById("cancelledCount").innerText=appointments.filter(a=>a.status==="Cancelled").length;
+}
+
+function cancelAppointment(id){
+    let a=appointments.find(x=>x.id===id);
+    if(a){a.status="Cancelled";}
+    renderAppointments();
+    const toast=document.getElementById("toast");
+    toast.classList.add("show");
+    setTimeout(()=>toast.classList.remove("show"),3000);
+}
+
+let currentId=null;
+function openModal(id){
+    currentId=id;
+    document.getElementById("modal").classList.add("active");
+}
+function saveReschedule(){
+    let a=appointments.find(x=>x.id===currentId);
+    if(a){
+        a.date=document.getElementById("newDate").value;
+        a.time=document.getElementById("newTime").value;
+        a.status="Upcoming";
+    }
+    document.getElementById("modal").classList.remove("active");
+    renderAppointments();
+}
+
+document.getElementById("search").addEventListener("input",renderAppointments);
+document.getElementById("filter").addEventListener("change",renderAppointments);
+document.getElementById("sort").addEventListener("change",renderAppointments);
+
+window.onload=()=>{
+    setTimeout(renderAppointments,1000);
+};
+
+/* Generate particles */
+const particleContainer=document.querySelector(".particles");
+for(let i=0;i<25;i++){
+    let span=document.createElement("span");
+    span.style.left=Math.random()*100+"vw";
+    span.style.animationDuration=(6+Math.random()*10)+"s";
+    span.style.opacity=Math.random();
+    particleContainer.appendChild(span);
+}
+</script>
+
+</body>
+</html>

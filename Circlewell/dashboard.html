@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CircleWell Premium Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Inter',sans-serif;
+}
+
+body{
+  background: radial-gradient(circle at 10% 10%, #0ea5a5, #020617 70%);
+  color:white;
+  overflow-x:hidden;
+}
+
+html{scroll-behavior:smooth}
+
+/* NAVBAR */
+.topbar{
+  position:sticky;
+  top:0;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:18px 60px;
+  backdrop-filter:blur(20px);
+  background:rgba(2,6,23,0.6);
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  z-index:1000;
+}
+
+.logo{
+  font-size:28px;
+  font-weight:800;
+  letter-spacing:1px;
+  background:linear-gradient(90deg,#22d3ee,#a78bfa,#f472b6);
+  -webkit-background-clip:text;
+  color:transparent;
+}
+
+.nav-links a{
+  margin:0 14px;
+  text-decoration:none;
+  color:#cbd5e1;
+  font-weight:500;
+  transition:.3s;
+  position:relative;
+}
+
+.nav-links a::after{
+  content:"";
+  position:absolute;
+  bottom:-6px;
+  left:0;
+  width:0%;
+  height:2px;
+  background:#22d3ee;
+  transition:.3s;
+}
+
+.nav-links a:hover{
+  color:white;
+}
+
+.nav-links a:hover::after{
+  width:100%;
+}
+
+/* HERO */
+.hero{
+  margin:60px;
+  padding:80px;
+  border-radius:35px;
+  background:linear-gradient(135deg,#1e3a8a,#14b8a6,#9333ea);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 40px 100px rgba(0,0,0,0.4);
+}
+
+.hero h1{
+  font-size:48px;
+  font-weight:800;
+  margin-bottom:15px;
+}
+
+.hero p{
+  font-size:18px;
+  opacity:.9;
+  margin-bottom:30px;
+}
+
+.health-id-card{
+  background:rgba(255,255,255,0.2);
+  padding:25px;
+  border-radius:20px;
+  backdrop-filter:blur(15px);
+  transition:.4s;
+}
+
+.health-id-card:hover{
+  transform:translateY(-8px);
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(2,170px);
+  gap:25px;
+}
+
+.stat{
+  background:rgba(255,255,255,0.2);
+  backdrop-filter:blur(15px);
+  padding:25px;
+  border-radius:20px;
+  text-align:center;
+  transition:.4s;
+}
+
+.stat:hover{
+  transform:translateY(-10px) scale(1.05);
+  box-shadow:0 25px 60px rgba(0,0,0,.4);
+}
+
+.stat h2{
+  font-size:32px;
+}
+
+.stat span{
+  font-size:14px;
+  opacity:.8;
+}
+
+/* SECTION TITLE */
+.section-title{
+  text-align:center;
+  font-size:36px;
+  font-weight:700;
+  margin:80px 0 40px;
+  background:linear-gradient(90deg,#5eead4,#a78bfa);
+  -webkit-background-clip:text;
+  color:transparent;
+}
+
+/* FEATURES */
+.features{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:30px;
+  padding:0 60px 80px;
+}
+
+.feature-card{
+  background:rgba(255,255,255,0.07);
+  padding:35px;
+  border-radius:25px;
+  transition:.4s;
+  cursor:pointer;
+  border:1px solid rgba(255,255,255,0.08);
+}
+
+.feature-card:hover{
+  transform:translateY(-12px);
+  background:rgba(255,255,255,0.12);
+  box-shadow:0 30px 80px rgba(0,0,0,0.5);
+}
+
+.feature-card h3{
+  margin-bottom:10px;
+  font-size:20px;
+  color:#5eead4;
+}
+
+/* MOOD TRACKER */
+.mood-section{
+  margin:0 60px 100px;
+  padding:60px;
+  background:rgba(255,255,255,0.05);
+  border-radius:30px;
+  text-align:center;
+}
+
+.moods{
+  margin-top:40px;
+  display:flex;
+  justify-content:center;
+  gap:40px;
+  font-size:50px;
+}
+
+.moods span{
+  cursor:pointer;
+  transition:.3s;
+  display:inline-block;
+}
+
+.moods span:hover{
+  transform:scale(1.3);
+}
+
+/* RUSH ANIMATION */
+@keyframes rush {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.8) rotate(10deg); }
+  60% { transform: scale(1.2) rotate(-10deg); }
+  100% { transform: scale(1); }
+}
+
+.rush{
+  animation:rush .6s ease;
+}
+
+/* FAQ */
+.info-section{
+  margin:0 60px 80px;
+  padding:60px;
+  border-radius:30px;
+  background:rgba(255,255,255,0.05);
+  line-height:1.8;
+}
+
+.faq-item{
+  margin-bottom:25px;
+}
+
+.faq-item h4{
+  color:#5eead4;
+  margin-bottom:8px;
+}
+
+.footer{
+  text-align:center;
+  padding:40px;
+  background:rgba(0,0,0,0.4);
+  font-size:14px;
+  opacity:.7;
+}
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+<div class="logo">CircleWell</div>
+<nav class="nav-links">
+<a href="#">Dashboard</a>
+<a href="appointment.html">Appointments</a>
+<a href="emergency-access.html">EMERGENCY</a>
+<a href="profile.html">Profile</a>
+<a href="logout.html">logout</a>
+
+
+</nav>
+</header>
+
+<section class="hero">
+<div>
+<h1>Welcome Back 👋</h1>
+<p>Your intelligent healthcare ecosystem.</p>
+<div class="health-id-card">
+<h3>Your ID</h3>
+<h2>CW-4589-7821</h2>
+</div>
+</div>
+
+<div class="stats">
+<div class="stat"><h2>12</h2><span>Doctor Visits</span></div>
+<div class="stat"><h2>28</h2><span>Prescriptions</span></div>
+<div class="stat"><h2>5</h2><span>Lab Reports</span></div>
+<div class="stat"><h2>2</h2><span>Active Orders</span></div>
+</div>
+</section>
+
+<h2 class="section-title">Explore All Features</h2>
+
+<section class="features">
+<a href="find-doctors.html" style="text-decoration:none;color:inherit;">
+  <div class="feature-card">
+    <h3>Find Doctors</h3>
+    <p>Search top specialists.</p>
+  </div>
+</a>
+<a href="book-appointment.html" style="text-decoration:none;color:inherit;">
+  <div class="feature-card">
+    <h3>Book Appointment</h3>
+    <p>Clinic or video consult.</p>
+  </div>
+</a>
+<a href="order-medicines.html" style="text-decoration:none;color:inherit;">
+  <div class="feature-card">
+    <h3>Order Medicines</h3>
+    <p>Get medicines delivered.</p>
+  </div>
+</a>
+<a href="records.html" style="text-decoration:none;color:inherit;">
+  <div class="feature-card">
+    <h3>Medical Vault</h3>
+    <p>Secure digital storage.</p>
+  </div>
+</a>
+<a href="health-analytics.html" style="text-decoration:none;color:inherit;">
+  <div class="feature-card">
+    <h3>Health Analytics</h3>
+    <p>Visual health tracking.</p>
+  </div>
+</a>
+<a href="ai-assistant.html" style="text-decoration:none;color:inherit;">
+  <div class="feature-card">
+    <h3>AI Health Assistant</h3>
+    <p>Smart triage chatbot.</p>
+  </div>
+</a>
+<a href="insurance.html" style="text-decoration:none;color:inherit;">
+  <div class="feature-card">
+    <h3>Insurance & Claims</h3>
+    <p>Manage policies easily.</p>
+  </div>
+</a>
+<a href="family-records.html" style="text-decoration:none;color:inherit;">
+  <div class="feature-card">
+    <h3>Family Profiles</h3>
+    <p>Manage loved ones.</p>
+  </div>
+</a>
+<a href="emergency-access.html" style="text-decoration:none;color:inherit;">
+  <div class="feature-card">
+    <h3>Emergency Access</h3>
+    <p>Instant secure sharing.</p>
+  </div>
+</a>
+</section>
+
+<h2 class="section-title">How Are You Feeling Today?</h2>
+
+<section class="mood-section">
+<p>Select your mood and get personalized suggestions.</p>
+<div class="moods">
+<span onclick="rush(this)">😊</span>
+<span onclick="rush(this)">😷</span>
+<span onclick="rush(this)">🤒</span>
+<span onclick="rush(this)">😴</span>
+<span onclick="rush(this)">💪</span>
+</div>
+</section>
+
+<h2 class="section-title">Frequently Asked Questions</h2>
+
+<section class="info-section">
+<div class="faq-item">
+<h4>Is my data secure?</h4>
+<p>Yes, fully encrypted with advanced security.</p>
+</div>
+<div class="faq-item">
+<h4>Can I share emergency records?</h4>
+<p>Yes, temporary emergency access is available.</p>
+</div>
+<div class="faq-item">
+<h4>Can I manage family health?</h4>
+<p>Yes, multiple profiles supported.</p>
+</div>
+</section>
+
+<div class="footer">
+© 2025 CircleWell — Smarter Digital Healthcare.
+</div>
+
+<script>
+function rush(el){
+  el.classList.add("rush");
+  setTimeout(()=>el.classList.remove("rush"),600);
+}
+</script>
+
+</body>
+</html>
